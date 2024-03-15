@@ -38,7 +38,7 @@ const buildMessage = () => {
 
 const scrollToPageBottom = () => {
   setTimeout(() => {
-    const layoutBody = document.getElementById('layout-body');
+    const layoutBody: any = document.getElementById('layout-body');
     layoutBody.scrollTop = layoutBody.scrollHeight;
   }, 0);
 }
