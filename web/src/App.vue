@@ -36,14 +36,23 @@ const buildMessage = () => {
   return _messages.join("\n\n") + "\n\AI:\n"
 }
 
+const scrollToPageBottom = () => {
+  setTimeout(() => {
+    const layoutBody = document.getElementById('layout-body');
+    layoutBody.scrollTop = layoutBody.scrollHeight;
+  }, 0);
+}
+
 const sendMessage = async (event: { preventDefault: () => void }) => {
   event.preventDefault() // 阻止默认事件
   state.loadding = true
+  if(state.message.trim() === "") return
   messages.addMessage({
     username: "user",
     msg: state.message,
     type: 1,
   })
+  scrollToPageBottom()
   let question = ""
   if (setting.value.continuously) {
     question = buildMessage()
@@ -59,6 +68,8 @@ const sendMessage = async (event: { preventDefault: () => void }) => {
     type: 0,
   })
   state.loadding = false
+  scrollToPageBottom()
+  
 }
 
 const clearMessages = () => {
