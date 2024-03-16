@@ -6,7 +6,7 @@ import dayjs from 'dayjs'
 const messages = useStorage<TMessage[]>('messages', [
   {
     username: "chatGPT",
-    msg: "Hello, I'm chatGPT",
+    msg: "你好！请问有什么可以帮助您的？",
     time: dayjs().format('HH:mm'),
     type: 0,
   },
