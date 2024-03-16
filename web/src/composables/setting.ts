@@ -9,7 +9,7 @@ type Setting = {
 
 const setting = useStorage<Setting>('setting', {
   app_key: '',
-  model: 'text-davinci-003',
+  model: 'gpt-3.5-turbo',
   continuously: false,
 })
 

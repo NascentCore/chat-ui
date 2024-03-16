@@ -3,7 +3,7 @@ import useSetting from '@/composables/setting'
 import { SettingOutlined } from '@ant-design/icons-vue'
 
 const setting = useSetting()
-const models = ref(['text-davinci-003', 'text-davinci-002', 'text-curie-001', 'text-babbage-001', 'text-ada-001', 'gpt-3.5-turbo'])
+const models = ref(['gpt-3.5-turbo', 'text-davinci-003', 'text-davinci-002', 'text-curie-001', 'text-babbage-001', 'text-ada-001'])
 
 const props = defineProps<{
   visible: boolean
@@ -34,7 +34,7 @@ const handleOk = () => {
 
       <a-form :model="setting">
         <a-form-item label="API_KEY">
-          <a-input v-model:value="setting.app_key" placeholder="请输入API_KEY，以sk-开头的字符串" />
+          <a-input v-model:value="setting.app_key" placeholder="请输入API_KEY" />
         </a-form-item>
         <a-form-item label="连续对话">
           <a-switch v-model:checked="setting.continuously" checked-children="开" un-checked-children="关" />
