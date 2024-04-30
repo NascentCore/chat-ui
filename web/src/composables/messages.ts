@@ -3,7 +3,7 @@ import { TMessage } from '@/types'
 import dayjs from 'dayjs'
 
 
-const messages = useStorage<TMessage[]>('messages', [
+const messages = useStorage<TMessage[]>('messages_' + window.location.pathname, [
   {
     username: "chatGPT",
     msg: "你好！请问有什么可以帮助您的？",
