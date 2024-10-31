@@ -9,13 +9,13 @@ class ChatMessageTurbo(BaseModel):
 
 
 class MessageTurbo(BaseModel):
-    model: Optional[str] = Field(default="gpt-3.5-turbo", description="Model name")
+    model: Optional[str] = Field(default="/mnt/models", description="Model name")
     messages: Optional[List[ChatMessageTurbo]] = Field(default=None, description="Messages")
     stop: Optional[list] = Field(default=None, description="Stop sequence")
 
 
 class Message(BaseModel):
-    model: Optional[str] = Field(default="gpt-3.5-turbo", description="Model name")
+    model: Optional[str] = Field(default="/mnt/models", description="Model name")
     prompt: str = Field(..., description="Prompt text")
     max_tokens: Optional[int] = Field(default=2048, description="Maximum number of tokens")
     temperature: Optional[float] = Field(default=0.5, description="Temperature")

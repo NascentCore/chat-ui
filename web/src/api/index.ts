@@ -3,6 +3,7 @@ import useSetting from "@/composables/setting";
 import { TSummary } from '@/types'
 
 const setting = useSetting()
+const url = new URL(window.location.href);
 export const completion = async (model: string, text: string) => {
   const max_tokens_dict: { [key: string]: number } = {
     'text-davinci-003': 4097,
@@ -12,7 +13,7 @@ export const completion = async (model: string, text: string) => {
     'text-ada-001': 2048,
   }
   const res = await postRequest({
-    url: '/completions',
+    url: `${url.origin}${url.pathname}/completions`,
     data: {
       model: model,
       prompt: text,
@@ -34,10 +35,10 @@ export const completion = async (model: string, text: string) => {
 
 export const completionTurbo = async (text: string) => {
   const res = await postRequest({
-    url: '/completions_turbo',
+    url: `${url.origin}${url.pathname}/completions_turbo`,
     data: {
-      model: 'gpt-3.5-turbo',
-      messages: [{ "role": "user", "content": text }],
+      model: "/mnt/models",
+      messages: [{ role: "user", content: text }],
       stop: [
         "\nAI:",
         "\nUser:",
@@ -58,7 +59,7 @@ interface creditSummaryType {
 
 export const creditSummary = async (): Promise<creditSummaryType> => {
   return await getRequest({
-    url: '/credit_summary',
+    url: `${url.origin}${url.pathname}/credit_summary`,
     headers: {
       api_key: setting.value.app_key,
     }

@@ -8,6 +8,7 @@ WORKDIR /app
 COPY api/requirements.txt /app/api/requirements.txt
 RUN pip install --no-cache-dir -r api/requirements.txt
 COPY --from=build /app/web/dist /app/api/dist
+RUN sed -i 's#/assets#assets#' /app/api/dist/index.html
 COPY start.sh /app
 COPY api /app/api
 CMD ["/bin/bash", "start.sh"]
