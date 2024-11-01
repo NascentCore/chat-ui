@@ -8,10 +8,10 @@ type Setting = {
 }
 
 const setting = useStorage<Setting>('setting', {
-  app_key: '',
-  model: 'gpt-3.5-turbo',
+  app_key: "",
+  model: "/mnt/models",
   continuously: false,
-})
+});
 
 const useSetting = () => setting
 

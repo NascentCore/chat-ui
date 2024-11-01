@@ -1,97 +1,108 @@
 <script setup lang="ts">
-import dayjs from 'dayjs'
-import { ClearOutlined, LoadingOutlined, RedoOutlined, SettingOutlined, GithubOutlined } from '@ant-design/icons-vue'
-import { completion, creditSummary, completionTurbo } from '@/api'
-import Message from './components/message.vue'
-import SettingModal from './components/setting.vue'
-import useSetting from '@/composables/setting'
-import useMessages from '@/composables/messages'
-import { TSummary } from '@/types'
+import dayjs from "dayjs";
+import {
+  ClearOutlined,
+  LoadingOutlined,
+  RedoOutlined,
+  SettingOutlined,
+  GithubOutlined,
+} from "@ant-design/icons-vue";
+import { completion, creditSummary, completionTurbo } from "@/api";
+import Message from "./components/message.vue";
+import SettingModal from "./components/setting.vue";
+import useSetting from "@/composables/setting";
+import useMessages from "@/composables/messages";
+import { TSummary } from "@/types";
 
-const setting = useSetting()
+const setting = useSetting();
 
 const state = reactive({
-  message: '',
+  message: "",
   loadding: false,
   visible: false,
   summary: {} as TSummary,
-})
-const createdAt = dayjs().format('YYYY-MM-DD HH:mm:ss')
+});
+const createdAt = dayjs().format("YYYY-MM-DD HH:mm:ss");
 
-const messages = useMessages()
-
+const messages = useMessages();
 
 const buildMessage = () => {
-  let _messages = []
-  const lastMessages = messages.getLastMessages(10)
+  let _messages = [];
+  const lastMessages = messages.getLastMessages(10);
 
   for (let i = 0; i < lastMessages.length; i++) {
-    const element = lastMessages[i]
+    const element = lastMessages[i];
     if (element.type === 0) {
-      _messages.push("AI:\n" + element.msg)
+      _messages.push("AI:\n" + element.msg);
     } else {
-      _messages.push("User:\n" + element.msg)
+      _messages.push("User:\n" + element.msg);
     }
   }
-  return _messages.join("\n\n") + "\n\AI:\n"
-}
+  return _messages.join("\n\n") + "\n\AI:\n";
+};
 
 const scrollToPageBottom = () => {
   setTimeout(() => {
-    const layoutBody: any = document.getElementById('layout-body');
+    const layoutBody: any = document.getElementById("layout-body");
     layoutBody.scrollTop = layoutBody.scrollHeight;
   }, 0);
-}
+};
 
 const sendMessage = async (event: { preventDefault: () => void }) => {
-  event.preventDefault() // 阻止默认事件
-  state.loadding = true
-  if(state.message.trim() === "") return
+  event.preventDefault(); // 阻止默认事件
+  state.loadding = true;
+  if (state.message.trim() === "") return;
   messages.addMessage({
     username: "user",
     msg: state.message,
     type: 1,
-  })
-  scrollToPageBottom()
-  let question = ""
+  });
+  scrollToPageBottom();
+  let question = "";
   if (setting.value.continuously) {
-    question = buildMessage()
+    question = buildMessage();
   } else {
-    question = "User:\n" + state.message + "\n\nAI:\n"
+    question = "User:\n" + state.message + "\n\nAI:\n";
   }
-  state.message = ""
-  const data: any = setting.value.model === 'gpt-3.5-turbo' ? await completionTurbo(question) : await completion(setting.value.model, question)
-  const replyMessage = data?.choices ? (data.choices[0]?.text ? data.choices[0].text : data.choices[0].message.content) : data?.error?.message
+  state.message = "";
+  const data: any =
+    setting.value.model === "/mnt/models"
+      ? await completionTurbo(question)
+      : await completion(setting.value.model, question);
+  const replyMessage = data?.choices
+    ? data.choices[0]?.text
+      ? data.choices[0].text
+      : data.choices[0].message.content
+    : data?.error?.message;
   messages.addMessage({
     username: "chatGPT",
     msg: replyMessage,
     type: 0,
-  })
-  state.loadding = false
-  scrollToPageBottom()
-  
-}
+  });
+  state.loadding = false;
+  scrollToPageBottom();
+};
 
 const clearMessages = () => {
-  messages.clearMessages()
-}
+  messages.clearMessages();
+};
 
 const totalAvailable = computed(() => {
-  const total = state.summary?.total_available || 0
-  return total.toFixed(2)
-})
+  const total = state.summary?.total_available || 0;
+  return total.toFixed(2);
+});
 const refushCredit = async () => {
-  state.loadding = true
-  state.summary = await creditSummary()
-  state.loadding = false
-}
+  state.loadding = true;
+  state.summary = await creditSummary();
+  state.loadding = false;
+};
 const handleToGithub = () => {
-  window.open('https://github.com/mic1on/chatGPT-web')
-}
+  window.open("https://github.com/mic1on/chatGPT-web");
+};
 
 onMounted(async () => {
-  await refushCredit()
-})
+  await refushCredit();
+});
 </script>
 
 <template>
@@ -101,14 +112,22 @@ onMounted(async () => {
       <span class="text-size-5 pl-5">算想三千</span>
       <a-tooltip>
         <template #title>清除聊天记录</template>
-        <a-popconfirm title="确定清除本地所有聊天记录吗?" ok-text="是的" cancel-text="再想想" @confirm="clearMessages">
+        <a-popconfirm
+          title="确定清除本地所有聊天记录吗?"
+          ok-text="是的"
+          cancel-text="再想想"
+          @confirm="clearMessages"
+        >
           <ClearOutlined class="pl-3 cursor-pointer" />
         </a-popconfirm>
       </a-tooltip>
 
       <a-tooltip>
         <template #title>设置</template>
-        <SettingOutlined class="pl-3 cursor-pointer" @click="state.visible = true" />
+        <SettingOutlined
+          class="pl-3 cursor-pointer"
+          @click="state.visible = true"
+        />
       </a-tooltip>
 
       <!-- <a-tooltip>
@@ -129,7 +148,9 @@ onMounted(async () => {
         <div class="flex-1 relative flex flex-col">
           <!-- header -->
           <!-- content -->
-          <div class="flex-1 inset-0 overflow-hidden bg-transparent bg-bottom bg-cover flex flex-col">
+          <div
+            class="flex-1 inset-0 overflow-hidden bg-transparent bg-bottom bg-cover flex flex-col"
+          >
             <!-- dialog -->
             <div class="flex-1 w-full self-center">
               <div class="relative px-3 py-1 m-auto flex flex-col">
@@ -139,25 +160,34 @@ onMounted(async () => {
                 <div class="mx-0 my-1 self-center text-xs text-gray-400">
                   {{ createdAt }}
                 </div>
-                <Message :message=msg v-for="msg in messages.messages.value"
-                  :class="msg.type === 1 ? 'send' : 'replay'" />
+                <Message
+                  :message="msg"
+                  v-for="msg in messages.messages.value"
+                  :class="msg.type === 1 ? 'send' : 'replay'"
+                />
               </div>
             </div>
           </div>
         </div>
       </main>
-
     </div>
     <footer id="footer">
-      <div class="relative p-4 w-full overflow-hidden text-gray-600 focus-within:text-gray-400 flex items-center">
-        <a-textarea v-model:value="state.message" :auto-size="{ minRows: 3, maxRows: 5 }" placeholder="请输入消息..."
+      <div
+        class="relative p-4 w-full overflow-hidden text-gray-600 focus-within:text-gray-400 flex items-center"
+      >
+        <a-textarea
+          v-model:value="state.message"
+          :auto-size="{ minRows: 3, maxRows: 5 }"
+          placeholder="请输入消息..."
           @pressEnter="sendMessage($event)"
-          class="appearance-none pl-10 py-2 w-full bg-white border border-gray-300 rounded-full text-sm placeholder-gray-800 focus:outline-none focus:border-blue-500 focus:border-blue-500 focus:shadow-outline-blue" />
+          class="appearance-none pl-10 py-2 w-full bg-white border border-gray-300 rounded-full text-sm placeholder-gray-800 focus:outline-none focus:border-blue-500 focus:border-blue-500 focus:shadow-outline-blue"
+        />
         <span class="absolute inset-y-0 right-0 bottom-6 pr-6 flex items-end">
-          <a-button shape="round" type="primary" @click="sendMessage($event)">发送</a-button>
+          <a-button shape="round" type="primary" @click="sendMessage($event)"
+            >发送</a-button
+          >
         </span>
       </div>
-
     </footer>
     <setting-modal v-model:visible="state.visible" />
   </div>

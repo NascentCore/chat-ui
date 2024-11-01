@@ -11,6 +11,7 @@ from model import Message, MessageTurbo
 
 app = FastAPI()
 
+BASE_URL = os.getenv("ENV_BASE_URL", "")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DIST_DIR = os.path.join(BASE_DIR, 'dist')
 ASSETS_DIR = os.path.join(DIST_DIR, 'assets')
@@ -38,7 +39,7 @@ app.add_middleware(
 
 @app.get("/", response_class=HTMLResponse)
 async def root():
-    return templates.TemplateResponse("index.html", {"request": {}})
+    return templates.TemplateResponse("index.html", {"request": {}, "base_url": BASE_URL})
 
 
 @app.post("/completions")
